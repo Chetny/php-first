@@ -6,11 +6,10 @@ namespace App;
 
 include_once('./src/utils/debug.php');
 
-if (!empty($_GET['action'])) {
-    $action = $_GET['action'];
-} else {
-    $action = null;
-}
+// $_GET - obsługa zapytań
+// $_POST
+
+$action = $GET['action'] ?? null;
 
 ?>
 
