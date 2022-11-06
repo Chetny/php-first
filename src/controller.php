@@ -4,20 +4,29 @@ declare(strict_types=1);
 
 namespace App;
 
-require_once('./src/view.php');
+include_once('./src/view.php');
+require_once('./config/config.php');
+require_once('./src/database.php');
 
 class Controller
 {
     const DEFAULT_ACTION = 'list';
     private array $getData;
     private array $postData;
+    private static array $configuration = [];
+    private Database $database;
 
     public function __construct(array $getData, array $postData)
     {
         $this->getData = $getData;
         $this->postData = $postData;
+        $this->database = new Database(self::$configuration);
     }
 
+    public static function initConfiguration(array $configuration): void
+    {
+        self::$configuration = $configuration;
+    }
 
     public function run(): void
     {
@@ -35,7 +44,9 @@ class Controller
                         'title' => $this->postData['title'],
                         'description' => $this->postData['description'],
                     ];
+                    header('Location: /');
                     $created = true;
+                    $this->database->createNote($viewParams);
                 }
                 $viewParams['created'] = $created;
                 break;
