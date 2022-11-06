@@ -1,5 +1,8 @@
 <?php
 
+declare(strict_types=1);
+
+
 function dump($params)
 {
     echo ('
