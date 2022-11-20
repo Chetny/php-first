@@ -6,6 +6,8 @@ namespace App;
 
 use App\Exception\NotFoundException;
 
+require_once('AbstractController.php');
+
 class NoteController extends AbstractController
 {
 

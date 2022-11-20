@@ -6,9 +6,9 @@ namespace App;
 
 use App\Request;
 
-include_once('.src/View.php');
-include_once('.config/config.php');
-include_once('.src/Database.php');
+include_once('./src/view.php');
+require_once('./config/config.php');
+require_once('./src/database.php');
 
 abstract class AbstractController
 {
@@ -17,6 +17,7 @@ abstract class AbstractController
     protected Database $database;
     protected View $view;
     protected Request $request;
+
     public function __construct(Request $request)
     {
         $this->request = $request;
@@ -37,6 +38,7 @@ abstract class AbstractController
         }
         $this->$action();
     }
+
     protected function action(): string
     {
         return $this->request->getParam('action', self::DEFAULT_ACTION);
