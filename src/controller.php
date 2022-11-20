@@ -7,9 +7,9 @@ namespace App;
 use App\Exception\NotFoundException;
 use App\Request;
 
-include_once('./src/View.php');
+include_once('./src/view.php');
 require_once('./config/config.php');
-require_once('./src/Database.php');
+require_once('./src/database.php');
 
 class Controller
 {
@@ -18,6 +18,7 @@ class Controller
     private Database $database;
     private View $view;
     private Request $request;
+
     public function __construct(Request $request)
     {
         $this->request = $request;
@@ -30,70 +31,68 @@ class Controller
         self::$configuration = $configuration;
     }
 
+    public function createAction()
+    {
+        if ($this->request->hasPost()) {
+            $noteData = [
+                'title' => $this->request->postParam('title'),
+                'description' => $this->request->postParam('description'),
+            ];
+
+            $this->database->createNote($noteData);
+            header('Location: /?before=created');
+            exit;
+        }
+        $this->view->render('create');
+    }
+
+    public function showAction()
+    {
+        $noteId = (int) $this->request->getParam('id');
+
+        if (!$noteId) {
+            header('Location: /?error=missingNoteId');
+            exit;
+        }
+        try {
+            $note = $this->database->getNote($noteId);
+        } catch (NotFoundException $e) {
+            header('Location: /?error=noteNotFound');
+            exit;
+        }
+        $viewParams = [
+            'title' => 'Moja notatka',
+            'description' => 'Opis',
+            'note' => $note,
+        ];
+        $this->view->render('show', ['note' => $note]);
+    }
+
+    public function listAction()
+    {
+        $viewParams = [
+            'notes' => $this->database->getNotes(),
+            'before' => $this->request->getParam('before'),
+            'error' => $this->request->getParam('error'),
+        ];
+        $this->view->render('list', [
+            'notes' => $this->database->getNotes(),
+            'before' => $this->request->getParam('before'),
+            'error' => $this->request->getParam('error'),
+        ]);
+    }
+
     public function run(): void
     {
-
-        switch ($this->action()) {
-            case 'create':
-                $page = 'create';
-                $data = $this->getRequestPost();
-                if (!empty($data)) {
-                    $noteData = [
-                        'title' => $data['title'],
-                        'description' => $data['description'],
-                    ];
-                    $this->database->createNote($noteData);
-                    header('Location: /?before=created');
-                    exit;
-                }
-                break;
-            case 'show':
-                $page = 'show';
-                $data = $this->getRequestGet();
-                $noteId = (int) $data['id'] ?? null;
-                if (!$noteId) {
-                    header('Location:/?error=missingNoteId');
-                    exit;
-                }
-                try {
-                    $note = $this->database->getNote($noteId);
-                } catch (NotFoundException $e) {
-                    header('Location: /?error=noteNotFound');
-                    exit;
-                }
-                $viewParams = [
-                    'title' => 'Moja notatka',
-                    'description' => 'Opis',
-                    'note' => $note,
-                ];
-                break;
-            default:
-                $page = 'list';
-                $data = $this->getRequestGet();
-                $viewParams = [
-                    'notes' => $this->database->getNotes(),
-                    'before' => $data['before'] ?? null,
-                    'error' => $data['error'] ?? null,
-                ];
-                break;
+        $action = $this->action() . 'Action';
+        if (!method_exists($this, $action)) {
+            $action = self::DEFAULT_ACTION . 'Action';
         }
-
-        $this->view->render($page, $viewParams ?? []);
+        $this->$action();
     }
 
     private function action(): string
     {
-        $data = $this->getRequestGet();
-        return $data['action'] ?? self::DEFAULT_ACTION;
-    }
-
-    private function getRequestPost(): array
-    {
-        return $this->request['post'] ?? [];
-    }
-
-    private function getRequestGet(): array
-    {
-        return $this->request['get'] ?? [];
+        return $this->request->getParam('action', self::DEFAULT_ACTION);
     }
 }

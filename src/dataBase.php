@@ -23,7 +23,7 @@ class Database
             $this->validateConfig($config);
             $this->createConnection($config);
         } catch (PDOException $e) {
-            throw new StorageException('Connection error');
+            throw new StorageException('Connection error', 400, $e);
         }
     }
 
@@ -46,7 +46,7 @@ class Database
             $result = $this->conn->query($query);
             $note = $result->fetch(PDO::FETCH_ASSOC);
         } catch (Throwable $e) {
-            throw new StorageException('nie udało się pobrać notatki', 400, $e);
+            throw new StorageException('Nie udało się pobrać notatki', 400, $e);
         }
         if (!$note) {
             throw new NotFoundException("Notatka o id: $id nie istnieje");
