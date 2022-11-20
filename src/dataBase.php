@@ -16,6 +16,7 @@ use Throwable;
 
 class Database
 {
+    private PDO $conn;
     public function __construct(array $config)
     {
         try {
@@ -35,13 +36,13 @@ class Database
             $query = "INSERT INTO notes(title,description,created) VALUES($title, $description, '$created')";
             $result = $this->conn->exec($query);
         } catch (Throwable $e) {
-            throw new StorageException('Nie udało się stworzyć nowej notatki', 400, $e);
+            throw new StorageException('Nie udało się utworzyć nowej notatki', 400, $e);
         }
     }
     public function getNote(int $id): array
     {
         try {
-            $query = "SELECT *FROM note WHERE id=$id";
+            $query = "SELECT * FROM note WHERE id=$id";
             $result = $this->conn->query($query);
             $note = $result->fetch(PDO::FETCH_ASSOC);
         } catch (Throwable $e) {

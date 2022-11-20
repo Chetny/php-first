@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace App;
 
 use App\Exception\NotFoundException;
+use App\Request;
 
-include_once('./src/view.php');
+include_once('./src/View.php');
 require_once('./config/config.php');
-require_once('./src/database.php');
+require_once('./src/Database.php');
 
 class Controller
 {
@@ -16,8 +17,8 @@ class Controller
     private static array $configuration = [];
     private Database $database;
     private View $view;
-    private array $request;
-    public function __construct(array $request)
+    private Request $request;
+    public function __construct(Request $request)
     {
         $this->request = $request;
         $this->view = new View();
