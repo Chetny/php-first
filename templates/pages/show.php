@@ -7,7 +7,7 @@
                 Tytuł: <?php echo htmlentities($note['title']) ?>
             </li>
             <li>
-                Opis: <?php echo htmlentities($note['descripion']) ?>
+                Opis: <?php echo htmlentities($note['description']) ?>
             </li>
             <li>Utworzono: <?php echo htmlentities($note['created']) ?></li>
             <li>
