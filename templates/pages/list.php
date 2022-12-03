@@ -27,6 +27,9 @@
                     case 'edited':
                         echo 'Notatka została zaktualizowana';
                         break;
+                    case 'deleted':
+                        echo 'Notatka została usunięta';
+                        break;
                 }
             }
             ?>
@@ -50,6 +53,10 @@
                                 <td><?php echo (int) $note['id'] ?></td>
                                 <td><?php echo $note['title'] ?></td>
                                 <td><?php echo $note['created'] ?></td>
+                                <td>
+                                    <a href="/?action=show&id=<?php echo (int) $note['id'] ?>"><button>Szczegóły</button></a>
+                                    <a href="/?action=delete&id=<php echo (int) $note['id'] ?>"><button>Usuń</button></a>
+                                </td>
                                 <td><a href="/?action=show&id=<?php echo (int) $note['id'] ?>">Pokaż</a></td>
                             </tr>
                         <?php endforeach; ?>
