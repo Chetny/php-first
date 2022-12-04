@@ -13,6 +13,7 @@ use Throwable;
 
 class Database
 {
+    private PDO $conn;
     public function __construct(array $config)
     {
         try {
