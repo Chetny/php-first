@@ -10,7 +10,7 @@ class View
     {
         $params['test'] = '<b>Test</b>';
         $params = $this->escape($params);
-        dump($params);
+        //dump($params);
         require_once('./templates/layout.php');
     }
 
@@ -27,7 +27,6 @@ class View
                 $clearParams[$key] = $param;
             }
         }
-
         return $clearParams;
     }
 }

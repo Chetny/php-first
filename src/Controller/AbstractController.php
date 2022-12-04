@@ -8,7 +8,6 @@ use App\Database;
 use App\Request;
 use App\View;
 
-
 abstract class AbstractController
 {
     const DEFAULT_ACTION = 'list';
@@ -16,6 +15,7 @@ abstract class AbstractController
     protected Database $database;
     protected View $view;
     protected Request $request;
+
     public function __construct(Request $request)
     {
         $this->request = $request;
@@ -41,6 +41,7 @@ abstract class AbstractController
     {
         return $this->request->getParam('action', self::DEFAULT_ACTION);
     }
+
     protected function redirect(string $to, array $params): void
     {
         $location = $to;
